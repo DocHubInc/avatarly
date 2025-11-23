@@ -1,5 +1,5 @@
-require 'rfc822'
 require 'pathname'
+require 'uri'
 require 'unicode_utils'
 
 class Avatarly
@@ -39,6 +39,7 @@ class Avatarly
 
     def generate_image(text, opts)
       command = MiniMagick::Tool::Convert.new
+      command << "xc:#{opts[:background_color]}"
       command.size "#{opts[:size]}x#{opts[:size]}"
       if text.length.positive?
         command.font opts[:font]
@@ -47,7 +48,6 @@ class Avatarly
         command.pointsize opts[:font_size]
         command.annotate  "+0+#{opts[:vertical_offset]}", text
       end
-      command << "xc:#{opts[:background_color]}"
       command << "#{opts[:format]}:-"
       MiniMagick::Image.read(command.call)
     end
@@ -55,7 +55,7 @@ class Avatarly
     def initials(text, opts)
       if opts[:separator]
         initials_for_separator(text, opts[:separator])
-      elsif text.is_email?
+      elsif email?(text)
         initials_for_separator(text.split('@').first, '.')
       elsif text.include?(' ')
         initials_for_separator(text, ' ')
@@ -89,6 +89,12 @@ class Avatarly
       opts[:font_size] = opts[:font_size].to_i
       opts[:vertical_offset] = opts[:vertical_offset].to_i
       opts
+    end
+
+    def email?(string)
+      return false if string.nil?
+
+      string.match?(URI::MailTo::EMAIL_REGEXP)
     end
   end
 end
