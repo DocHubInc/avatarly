@@ -39,8 +39,8 @@ class Avatarly
 
     def generate_image(text, opts)
       command = MiniMagick::Tool::Convert.new
-      command << "xc:#{opts[:background_color]}"
       command.size "#{opts[:size]}x#{opts[:size]}"
+      command << "xc:#{opts[:background_color]}"
       if text.length.positive?
         command.font opts[:font]
         command.fill opts[:font_color]
