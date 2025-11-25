@@ -17,7 +17,8 @@ RUN magick --version
 
 WORKDIR /app
 
-COPY Gemfile Gemfile.lock avatarly.gemspec ./
+COPY Gemfile avatarly.gemspec ./
+COPY Gemfile.lock* ./
 COPY lib ./lib
 COPY assets ./assets
 COPY spec ./spec
