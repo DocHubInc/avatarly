@@ -12,8 +12,10 @@ RUN apk add --no-cache \
     ttf-freefont \
     fontconfig
 
-# Verify ImageMagick version (should be 7.x)
-RUN magick --version
+# Verify ImageMagick version is 7.x (fail build if not)
+RUN magick --version && \
+    magick --version | grep -q "ImageMagick 7\." || \
+    (echo "ERROR: Expected ImageMagick 7.x but got:" && magick --version && exit 1)
 
 WORKDIR /app
 

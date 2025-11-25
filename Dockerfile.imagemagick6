@@ -12,8 +12,10 @@ RUN apt-get update && apt-get install -y \
     fontconfig \
     && rm -rf /var/lib/apt/lists/*
 
-# Verify ImageMagick version (should be 6.x)
-RUN convert --version
+# Verify ImageMagick version is 6.x (fail build if not)
+RUN convert --version && \
+    convert --version | grep -q "ImageMagick 6\." || \
+    (echo "ERROR: Expected ImageMagick 6.x but got:" && convert --version && exit 1)
 
 WORKDIR /app
 
