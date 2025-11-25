@@ -1,0 +1,28 @@
+# Dockerfile for testing with ImageMagick 6
+# Debian packages include ImageMagick 6 by default
+FROM ruby:3.3-slim-bookworm
+
+# Install ImageMagick 6 and build dependencies
+RUN apt-get update && apt-get install -y \
+    imagemagick \
+    libmagickwand-dev \
+    build-essential \
+    git \
+    fonts-freefont-ttf \
+    fontconfig \
+    && rm -rf /var/lib/apt/lists/*
+
+# Verify ImageMagick version (should be 6.x)
+RUN convert --version
+
+WORKDIR /app
+
+COPY Gemfile Gemfile.lock avatarly.gemspec ./
+COPY lib ./lib
+COPY assets ./assets
+COPY spec ./spec
+
+RUN bundle install
+
+CMD ["bundle", "exec", "rspec", "--format", "documentation"]
+

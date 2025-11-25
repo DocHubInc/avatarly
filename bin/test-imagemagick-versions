@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+echo "=========================================="
+echo "Testing Avatarly with ImageMagick 6"
+echo "=========================================="
+docker compose -f docker-compose.test.yml build test-imagemagick6
+docker compose -f docker-compose.test.yml run --rm test-imagemagick6
+
+echo ""
+echo "=========================================="
+echo "Testing Avatarly with ImageMagick 7"
+echo "=========================================="
+docker compose -f docker-compose.test.yml build test-imagemagick7
+docker compose -f docker-compose.test.yml run --rm test-imagemagick7
+
+echo ""
+echo "=========================================="
+echo "✅ All ImageMagick version tests passed!"
+echo "=========================================="
+
