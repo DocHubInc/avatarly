@@ -1,0 +1,31 @@
+# Dockerfile for testing with ImageMagick 7
+# Alpine ships with ImageMagick 7 by default
+FROM ruby:3.3-alpine
+
+# Install ImageMagick 7 and build dependencies
+RUN apk add --no-cache \
+    imagemagick \
+    imagemagick-dev \
+    imagemagick-jpeg \
+    build-base \
+    git \
+    ttf-freefont \
+    fontconfig
+
+# Verify ImageMagick version is 7.x (fail build if not)
+RUN magick --version && \
+    magick --version | grep -q "ImageMagick 7\." || \
+    (echo "ERROR: Expected ImageMagick 7.x but got:" && magick --version && exit 1)
+
+WORKDIR /app
+
+COPY Gemfile avatarly.gemspec ./
+COPY Gemfile.lock* ./
+COPY lib ./lib
+COPY assets ./assets
+COPY spec ./spec
+
+RUN bundle install
+
+CMD ["bundle", "exec", "rspec", "--format", "documentation"]
+

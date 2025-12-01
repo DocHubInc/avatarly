@@ -1,0 +1,17 @@
+services:
+  test-imagemagick6:
+    build:
+      context: .
+      dockerfile: Dockerfile.imagemagick6
+    volumes:
+      - ./spec:/app/spec
+      - ./lib:/app/lib:ro
+
+  test-imagemagick7:
+    build:
+      context: .
+      dockerfile: Dockerfile.imagemagick7
+    volumes:
+      - ./spec:/app/spec
+      - ./lib:/app/lib:ro
+

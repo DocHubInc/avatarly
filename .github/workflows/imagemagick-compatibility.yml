@@ -1,0 +1,36 @@
+name: Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test-imagemagick-versions:
+    runs-on: ubuntu-latest
+    name: Test with ImageMagick v6 & v7
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Run all specs with ImageMagick 6
+        run: |
+          echo "=========================================="
+          echo "Running all specs with ImageMagick 6"
+          echo "=========================================="
+          docker compose -f docker-compose.test.yml build test-imagemagick6
+          docker compose -f docker-compose.test.yml run --rm test-imagemagick6
+
+      - name: Run all specs with ImageMagick 7
+        run: |
+          echo "=========================================="
+          echo "Running all specs with ImageMagick 7"
+          echo "=========================================="
+          docker compose -f docker-compose.test.yml build test-imagemagick7
+          docker compose -f docker-compose.test.yml run --rm test-imagemagick7
+
